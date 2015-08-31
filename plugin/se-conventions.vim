@@ -236,6 +236,7 @@ function! SEConventions()
             " remove consecutive spaces
             execute leader . 's/\%>'.startPos.'c\v  +([^$]*)@=/ /gi'
         endif
+
         let current += 1
     endwhile
 endfunction
