@@ -1,12 +1,12 @@
 # vim-se-conventions
 Sycamore code conventions made easy.
 
-Version 1.0
+Version 1.0    
 Include a visual mode remap for the SEConventions command:
 
     vnoremap ;sec <esc>:SEConventions<CR>   
 
-This command will update most of the HTML contained within `print()` statments up to Sycamore standards.
+This command will update most of the HTML contained within `print()` statements up to Sycamore standards.
 
 ### Comprehensive list:
 * Add
@@ -26,7 +26,7 @@ This command will update most of the HTML contained within `print()` statments u
  * `<B>` tags and `se-bold` classes contained within `TR` elements with the `se-bold` class
  * Left text alignment (HTML, CSS, or `se-left` class) on `TD` elements
  * Empty `style` and `class` attributes
- * Extra spaces within html elements
+ * Extra spaces within HTML elements
 * Replace/Change
  * Gray(`#cfcfcf`), light gray(`#efefef`), pink(`#ffcfcf`), and school color(`$titlefont`) background colors to 
  their respective `se-bg` classes
@@ -35,4 +35,4 @@ This command will update most of the HTML contained within `print()` statments u
  * `width` attributes on `TD` and `TABLE` elements to CSS properties
  * Right and center text alignment (HTML or CSS) to appropriate `se-` class
  
-**Any problems can be directed towards Jon or left as comments/issues on [github](https://github.com/JRonhovde/vim-se-conventions)**
+**Any problems can be directed toward Jon or left as comments/issues on [GitHub](https://github.com/JRonhovde/vim-se-conventions)**
