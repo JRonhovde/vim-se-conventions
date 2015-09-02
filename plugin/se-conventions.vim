@@ -31,6 +31,9 @@ function! SEConventions()
             " newline characters
             execute leader . 's/\v\\n( *" *\);)@=//g'
 
+            " add apostrophes to all class attributes
+            execute leader . 's/\v%(class\=)@<=([^'.a.' ][^ ]*)%( )@=/'.a.'\1'.a.'/gi'
+
             "empty hrefs + return false
             execute leader . 's/\v(<A[^>]*)@<=(href\='.a.' *'.a.'|return false;=)*//gi' 
 
@@ -44,7 +47,7 @@ function! SEConventions()
             if tablePos > -1  
                 " add the 'table' class to a TABLE that already has a class
                 " attribute, but no 'table' class
-                execute leader . 's/\v(\<table[^>]+)@<=(class\=)(.*table(-)@!)@!/class='.a.'table /gi'
+                execute leader . 's/\v(\<table[^>]+)@<=(class\=)'.a.'=(.*table(-)@![^ '.a.']*)@!'.a.'=/class='.a.'table /gi'
                 " add class='table' to TABLE element that has no class
                 " attribute
                 execute leader . 's/\v(\<table[^>])%(.*class\=.*$)@!/\1 class='.a.'table'.a.' /gi'
