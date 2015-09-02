@@ -2,6 +2,15 @@
 Sycamore code conventions made easy.
 
 Version 1.0    
+## Installation/Setup
+
+If you don't have a preferred installation method, I recommend
+installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
+then simply copy and paste:
+
+    cd ~/.vim/bundle
+    git clone git://github.com/JRonhovde/vim-se-conventions    
+
 Include a visual mode remap for the SEConventions command:
 
     vnoremap ;sec <esc>:SEConventions<CR>   
