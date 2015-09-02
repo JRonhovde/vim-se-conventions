@@ -32,7 +32,8 @@ function! SEConventions()
             execute leader . 's/\v\\n( *" *\);)@=//g'
 
             "empty hrefs + return false
-            execute leader . 's/\v(<A[^>]*)@<=href\='.a.' *'.a.' (.*onClick[^;]*;)[^r]*(return false;=)/\2/gi' 
+            execute leader . 's/\v(<A[^>]*)@<=(href\='.a.' *'.a.'|return false;=)*//gi' 
+
             " MISC. REMOVAL ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -72,7 +73,7 @@ function! SEConventions()
             " FONT TAGS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             if fontSize != 0
                 "remove font tags with size=fontSize and closing font tag
-                execute leader . 's/\v\<font *%(face\=\$titlefont *|size\='.fontSize.' *){2} *\>((.*)%(\<\/font\>)|(.*;))/\1/gi'
+                execute leader . 's/\v(\<font *(face\=\$titlefont *|size\='.fontSize.' *){2} *\>|\<\/font\>)//gi'
                 let line = getline(current)
                 " set otherFontClass to be opposite of what is on the TABLE
                 " element and remove TABLE font class from TD/TR elements
@@ -239,6 +240,8 @@ function! SEConventions()
             execute leader.'s/\vclass\= //gi'
             " remove consecutive spaces
             execute leader . 's/\%>'.startPos.'c\v  +([^$]*)@=/ /gi'
+            " remove extra spaces before or after quotes
+            execute leader . 's/\%>'.startPos.'c\v(" +| +")([^$]*)@=/"/gi'
         endif
 
         let current += 1
