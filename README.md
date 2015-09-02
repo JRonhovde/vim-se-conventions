@@ -63,7 +63,7 @@ If the problem persists, it can be brought to my attention by creating an issue 
         .se-nobold
         .se-wrap
         .se-striped-green    
-        printf()` lines
+        printf() lines
 ```
 
  * `<font>` tags that contain attributes other than `face=$titlefont` and `size=1 or 2`
