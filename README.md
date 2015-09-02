@@ -15,7 +15,16 @@ Include a visual mode remap for the SEConventions command:
 
     vnoremap ;sec <esc>:SEConventions<CR>   
 
-This command will update most of the HTML contained within `print()` statements up to Sycamore standards.
+This command will update most of the HTML contained within visually selected `print()` statements to Sycamore standards.    
+
+If you encounter any problems, try updating the plugin from git:    
+
+    cd ~/.vim/bundle/vim-se-conventions    
+    git fetch -p    
+    git merge origin/master    
+
+If the problem persists, it can be brought to my attention by creating an issue on [GitHub](https://github.com/JRonhovde/vim-se-conventions)    
+
 
 ### Comprehensive list:
 * Add
@@ -43,5 +52,19 @@ This command will update most of the HTML contained within `print()` statements 
  an appropriate class on the `TD`
  * `width` attributes on `TD` and `TABLE` elements to CSS properties
  * Right and center text alignment (HTML or CSS) to appropriate `se-` class
- 
-**Any problems can be directed toward Jon or left as comments/issues on [GitHub](https://github.com/JRonhovde/vim-se-conventions)**
+* Unchanged
+ * Anything that would normally be replaced by:
+```php
+        .se-red
+        .se-tall-row
+        .se-font-title
+        .se-top
+        .se-nowrap
+        .se-nobold
+        .se-wrap
+        .se-striped-green    
+        printf()` lines
+```
+
+ * `<font>` tags that contain attributes other than `face=$titlefont` and `size=1 or 2`
+ * `<font>` tags not preceded by a `TD` element on the same line
