@@ -172,7 +172,7 @@ function! SEConventions()
             let line = getline(current)
 
             " check if TR has se-bold class
-            if match(line, '\v\c(\<tr[^>]*)@<=se-bold') 
+            if match(line, '\v\c(\<tr[^>]*)@<=se-bold') > -1
                 let boldRow = 1
             endif
 
