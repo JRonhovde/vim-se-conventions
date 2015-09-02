@@ -100,7 +100,7 @@ function! SEConventions()
                         " tag
                         let positionStr = '\%>'.classPos.'c\%<'.fontPos.'c'
                         " add font class to class attribute
-                        execute leader . 's/'.positionStr.'\v%(class\=)@<=%('.a.'([^'.a.']*)'.a.'|([\$A-Za-z0-9-_]*))/'.a.otherFontClass.'\1'.a.' /i'
+                        execute leader . 's/'.positionStr.'\v%(class\=)@<=%('.a.'([^'.a.']*)'.a.'|([\$A-Za-z0-9-_]*))/'.a.otherFontClass.' \1'.a.' /i'
 
                     else
                         " create class attribute in TD with font class
@@ -239,9 +239,11 @@ function! SEConventions()
             execute leader.'s/\vclass\='.a.' *'.a.'//gi'
             execute leader.'s/\vclass\= //gi'
             " remove consecutive spaces
-            execute leader . 's/\%>'.startPos.'c\v  +([^$]*)@=/ /gi'
+            execute leader . 's/\%>'.startPos.'c\v ( +[^$]*)@=//gi'
             " remove extra spaces before or after quotes
-            execute leader . 's/\%>'.startPos.'c\v(" +| +")([^$]*)@=/"/gi'
+            execute leader . 's/\%>'.startPos.'c\v((")@<= +| +(")@=)([^$]*)@=/"/gi'
+            " remove extra spaces after '>' or before '<'
+            execute leader . 's/\%>'.startPos.'c\v((\>)@<= +| +(\<)@=)([^$]*)@=//gi'
         endif
 
         let current += 1
