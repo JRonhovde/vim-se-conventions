@@ -72,7 +72,7 @@ function! SEConventions()
             " FONT TAGS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             if fontSize != 0
                 "remove font tags with size=fontSize and closing font tag
-                execute leader . 's/\v\<font *%(face\=\$titlefont *|size\='.fontSize.' *){2} *\>%((.*)%(\<\/font\>)|(.*;))/\1/gi'
+                execute leader . 's/\v\<font *%(face\=\$titlefont *|size\='.fontSize.' *){2} *\>((.*)%(\<\/font\>)|(.*;))/\1/gi'
 
                 " set otherFontClass to be opposite of what is on the TABLE
                 " element and remove TABLE font class from TD/TR elements
