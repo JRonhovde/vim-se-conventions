@@ -32,7 +32,7 @@ function! SEConventions()
             execute leader . 's/\v\\n( *" *\);)@=//g'
 
             "empty hrefs + return false
-            execute leader . 's/\v(<A[^>]*)@<=href\='.a.' *'.a.' (.*onClick[^;]*;)[^r]*(return false;)/\2/gi' 
+            execute leader . 's/\v(<A[^>]*)@<=href\='.a.' *'.a.' (.*onClick[^;]*;)[^r]*(return false;=)/\2/gi' 
             " MISC. REMOVAL ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
@@ -73,7 +73,7 @@ function! SEConventions()
             if fontSize != 0
                 "remove font tags with size=fontSize and closing font tag
                 execute leader . 's/\v\<font *%(face\=\$titlefont *|size\='.fontSize.' *){2} *\>((.*)%(\<\/font\>)|(.*;))/\1/gi'
-
+                let line = getline(current)
                 " set otherFontClass to be opposite of what is on the TABLE
                 " element and remove TABLE font class from TD/TR elements
                 if fontSize == 2
@@ -84,26 +84,30 @@ function! SEConventions()
                     execute leader . 's/\v(\<(td|tr)[^>]*)@<=se-font-small@!//gi'
                 endif
 
-                "get other font size e.g. abs(2 - 3) = 1
-                let otherFont = abs(fontSize - 3)
-                let line = getline(current)
-                "position of font tag containing otherFont
-                let fontPos = match(line, '\c\v(\<td[^>]*\>)@<=\<font([^>]+size\='.otherFont.')@=')
-                "position of class attribute, if there is one
-                let classPos = match(line, '\c\v(\<td[^>]+)@<=class\=')
-                if classPos > -1 && fontPos > classPos
-                    " syntax to check in between the class attribute and font
-                    " tag
-                    let positionStr = '\%>'.classPos.'c\%<'.fontPos.'c'
-                    " add font class to class attribute
-                    execute leader . 's/'.positionStr.'\v%(class\=)@<=%('.a.'([^'.a.']*)'.a.'|([\$A-Za-z0-9-_]*))/'.a.otherFontClass.'\1'.a.' /i'
+                " only remove 'otherFont' font tags if there is a TD on the
+                " same line
+                if match(line, '\c\v\<td') > -1
+                    "get other font size e.g. abs(2 - 3) = 1
+                    let otherFont = abs(fontSize - 3)
+                    let line = getline(current)
+                    "position of font tag containing otherFont
+                    let fontPos = match(line, '\c\v(\<td[^>]*\>)@<=\<font([^>]+size\='.otherFont.')@=')
+                    "position of class attribute, if there is one
+                    let classPos = match(line, '\c\v(\<td[^>]+)@<=class\=')
+                    if classPos > -1 && fontPos > classPos
+                        " syntax to check in between the class attribute and font
+                        " tag
+                        let positionStr = '\%>'.classPos.'c\%<'.fontPos.'c'
+                        " add font class to class attribute
+                        execute leader . 's/'.positionStr.'\v%(class\=)@<=%('.a.'([^'.a.']*)'.a.'|([\$A-Za-z0-9-_]*))/'.a.otherFontClass.'\1'.a.' /i'
 
-                else
-                    " create class attribute in TD with font class
-                    execute leader . 's/\%<'.fontPos.'c\v(\<td)@<= =/ class='.a.otherFontClass.a.' /i'
+                    else
+                        " create class attribute in TD with font class
+                        execute leader . 's/\%<'.fontPos.'c\v(\<td)@<= =/ class='.a.otherFontClass.a.' /i'
+                    endif
+                    " remove font tags
+                    execute leader . 's/\v(\<font *%(face\=\$titlefont *|size\='.otherFont.' *){2} *\>|\<\/font\>)//gi'
                 endif
-                " remove font tags
-                execute leader . 's/\v(\<font *%(face\=\$titlefont *|size\='.otherFont.' *){2} *\>|\<\/font\>)//gi'
             endif
             " FONT TAGS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
