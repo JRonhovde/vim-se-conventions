@@ -179,6 +179,8 @@ function! SEConventions()
             " if current TR has se-bold class, remove from TDs
             if boldRow == 1
                 execute leader . 's/\v(\<\/= *b *\>|(\<td[^>]*)@<=se-bold)//gi'
+            else
+                execute leader . 's/\v(\<td[^>]{-})%( class\='.a.'([^'.a.']*)'.a.')=(.*)\<\/= *b *\>/\1 class='.a.'se-bold \2'.a.' \3/i'
             endif
             " BACKGROUND COLORS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
