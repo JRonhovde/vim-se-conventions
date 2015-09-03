@@ -1,6 +1,6 @@
-" Version 1.0
-" set up a vnoremap in your .vimrc to run :SE_Conventions
-"
+" Version 1.0 
+" Updated: 9/2/15
+" git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
     finish
 endif
@@ -75,8 +75,21 @@ function! SEConventions()
 
             " FONT TAGS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             if fontSize != 0
-                "remove font tags with size=fontSize and closing font tag
-                execute leader . 's/\v(\<font *(face\=\$titlefont *|size\='.fontSize.' *){2} *\>|\<\/font\>)//gi'
+                "remove font tags with size=fontSize and optional closing font tag
+                let fontList = matchlist(line, '\c\v(\<font *%(face\=\$titlefont *|size\='.fontSize.' *){2} *\>)%(.*(\<\/font\>)|.*$)')
+                if len(fontList) > 2
+                    let fontTag = fontList[1]
+                    let closeFont = fontList[2]
+                    " escape special chars
+                    let fontTag = substitute(fontTag, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
+                    let closeFont = substitute(closeFont, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
+                    if strlen(closeFont) > 0
+                        execute leader . 's/\v'.fontTag.'|'.closeFont.'//gi'
+                    else
+                        execute leader . 's/\v'.fontTag.'//i'
+                    endif
+                endif
+
                 let line = getline(current)
                 " set otherFontClass to be opposite of what is on the TABLE
                 " element and remove TABLE font class from TD/TR elements
@@ -85,7 +98,7 @@ function! SEConventions()
                     execute leader . 's/\v(\<(td|tr)[^>]*)@<=se-font(-)@!//gi'
                 elseif fontSize == 1
                     let otherFontClass = 'se-font'
-                    execute leader . 's/\v(\<(td|tr)[^>]*)@<=se-font-small@!//gi'
+                    execute leader . 's/\v(\<(td|tr)[^>]*)@<=se-font-small//gi'
                 endif
 
                 " only remove 'otherFont' font tags if there is a TD on the
@@ -94,23 +107,30 @@ function! SEConventions()
                     "get other font size e.g. abs(2 - 3) = 1
                     let otherFont = abs(fontSize - 3)
                     let line = getline(current)
-                    "position of font tag containing otherFont
-                    let fontPos = match(line, '\c\v(\<td[^>]*\>)@<=\<font([^>]+size\='.otherFont.')@=')
                     "position of class attribute, if there is one
-                    let classPos = match(line, '\c\v(\<td[^>]+)@<=class\=')
-                    if classPos > -1 && fontPos > classPos
-                        " syntax to check in between the class attribute and font
-                        " tag
-                        let positionStr = '\%>'.classPos.'c\%<'.fontPos.'c'
-                        " add font class to class attribute
-                        execute leader . 's/'.positionStr.'\v%(class\=)@<=%('.a.'([^'.a.']*)'.a.'|([\$A-Za-z0-9-_]*))/'.a.otherFontClass.' \1'.a.' /i'
-
-                    else
-                        " create class attribute in TD with font class
-                        execute leader . 's/\%<'.fontPos.'c\v(\<td)@<= =/ class='.a.otherFontClass.a.' /i'
+                    let classList = matchlist(line, '\c\v%(\<td)@<=%([^>]*(class\='.a.')([^'.a.']*)'.a.'.{-}|.{-})(\<font *%(face\=\$titlefont *|size\='.otherFont.' *){2} *\>)%(.*(\<\/font\>)|.*$)')
+                    if len(classList) > 0 
+                        let classAttr = classList[1]
+                        let classes = classList[2]
+                        let fontTag = classList[3]
+                        let closeFont = classList[4]
+                        " escape special chars
+                        let fontTag = substitute(fontTag, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
+                        let closeFont = substitute(closeFont, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
+                        if strlen(classAttr) > 0
+                            let classes = substitute(classes, '\v(\$)', '\\\1', 'g')
+                            if classes !~ otherFontClass
+                                execute leader . 's/\v%(class\=)@<='.a.'/'.a.otherFontClass.' /i'
+                            endif
+                        else
+                            execute leader . 's/\v(\<td)@<=[ >]/ class='.a.otherFontClass.a.'\0/i'
+                        endif
+                        if strlen(closeFont) > 0
+                            execute leader . 's/\v'.fontTag.'|'.closeFont.'//gi'
+                        else
+                            execute leader . 's/\v'.fontTag.'//i'
+                        endif
                     endif
-                    " remove font tags
-                    execute leader . 's/\v(\<font *%(face\=\$titlefont *|size\='.otherFont.' *){2} *\>|\<\/font\>)//gi'
                 endif
             endif
             " FONT TAGS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -167,7 +187,11 @@ function! SEConventions()
 
             " if TR has se-bg-gray class and no se-bold class, add se-bold
             " class
-            execute leader . 's/\v%(\<tr[^>]*)@<=%(%([^>]*se-bold[^'.a.'])@<!(se-bg-gray)%([^'.a.']*se-bold.*$)@!/\1 se-bold/i'
+            let rowClasses = matchstr(line, '\v%(\<tr[^>]*class\='.a.')@<=([^'.a.']*)%('.a.')@=')
+            if rowClasses =~ 'se-bg-gray' && rowClasses !~ 'se-bold'
+                let rowClasses = substitute(rowClasses, '\v(\$)', '\\\1', 'g')
+                execute leader . 's/\v('.rowClasses.')/se-bold \1/i'
+            endif
 
             let line = getline(current)
 
