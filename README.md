@@ -39,12 +39,12 @@ If the problem persists, it can be brought to my attention by creating an issue 
  * newline chars `\n`preceding the end of a print statement `");`
  * `href=''` and `return false;`
  * HTML `width=` or CSS `width:` from `TR` elements
- * `<font>` and `</font>` tags within a TD that contain `face=$titlefont` and `size=1 or 2` when 
+ * `<font>` and `</font>` tags that contain `face=$titlefont` and `size=1 or 2` when 
  the `TABLE` element has the cooresponding font class (`size=1` -> `se-font-small` and `size=2` -> `se-font`)
  * `<B>` tags and `se-bold` classes contained within `TR` elements with the `se-bold` class
  * Left text alignment (HTML, CSS, or `se-left` class) on `TD` elements
  * Empty `style` and `class` attributes
- * Extra spaces within HTML elements
+ * Extra spaces within HTML elements and around opening and closing parentheses for `print()` statements
 * Replace/Change
  * Gray(`#cfcfcf`), light gray(`#efefef`), pink(`#ffcfcf`), and school color(`$titlefont`) background colors to 
  their respective `se-bg` classes
@@ -53,6 +53,8 @@ If the problem persists, it can be brought to my attention by creating an issue 
  * `width` attributes on `TD` and `TABLE` elements to CSS properties
  * Right and center text alignment (HTML or CSS) to appropriate `se-` class
 * Unchanged
+ * `<font>` tags that contain attributes other than `face=$titlefont` and `size=1 or 2`
+ * `<font>` tags not preceded by a `TD` element on the same line
  * Anything that would normally be replaced by:
 ```php
         .se-red
@@ -66,5 +68,4 @@ If the problem persists, it can be brought to my attention by creating an issue 
         printf() lines
 ```
 
- * `<font>` tags that contain attributes other than `face=$titlefont` and `size=1 or 2`
- * `<font>` tags not preceded by a `TD` element on the same line
+
