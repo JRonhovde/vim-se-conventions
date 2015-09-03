@@ -19,7 +19,7 @@ function! SEConventions()
         let leader = 'silent! ' . current . ',' . current
         let line = getline(current)
         " only modify lines in print statments
-        let startPos = match(line, '\c\v%(^[\t\s ]*)@<=print\("')
+        let startPos = match(line, '\c\v%(^[\t\s ]*)@<=print\( *"')
         if startPos > -1  
 
             " MISC. REMOVAL vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -270,7 +270,7 @@ function! SEConventions()
             " remove consecutive spaces
             execute leader . 's/\%>'.startPos.'c\v ( +[^$]*)@=//gi'
             " remove extra spaces before or after quotes
-            execute leader . 's/\%>'.startPos.'c\v((")@<= +| +(")@=)([^$]*)@=/"/gi'
+            execute leader . 's/\%>'.startPos.'c\v((\()@<= *" *| *" *(\))@=)/"/gi'
             " remove extra spaces after '>' or before '<'
             execute leader . 's/\%>'.startPos.'c\v((\>)@<= +| +(\<)@=)([^$]*)@=//gi'
         endif
