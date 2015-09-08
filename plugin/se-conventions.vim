@@ -1,4 +1,4 @@
-" Version 1.0 
+" Version 1.01 
 " Updated: 9/2/15
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
@@ -33,6 +33,10 @@ function! SEConventions()
 
             " add apostrophes to all class attributes
             execute leader . 's/\v%(class\=)@<=([^'.a.' ][^ ]*)%( )@=/'.a.'\1'.a.'/gi'
+
+            " add semicolons to end of all style attributes, if not already
+            " present
+            execute leader . 's/\v%(style\='.a.'[^'.a.']*[^; ])@<= *'.a.'/;'.a.'/gi'
 
             "empty hrefs + return false
             execute leader . 's/\v(<A[^>]*)@<=(href\='.a.' *'.a.'|return false;=)*//gi' 
