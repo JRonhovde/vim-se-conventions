@@ -1,7 +1,7 @@
 # vim-se-conventions
 Sycamore code conventions made easy.
 
-Version 1.0    
+Version 1.02    
 ## Installation/Setup
 
 If you don't have a preferred installation method, I recommend
