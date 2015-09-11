@@ -22,7 +22,7 @@ function! SEConventions()
         let startPos = match(line, '\c\v%(^[\t\s ]*)@<=print\( *"')
         if startPos > -1  
 
-            " MISC. REMOVAL vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            " MISC. REMOVAL {
             "border cellpadding cellshading bgcolor=white
             "background-color:#ffffff
             let nuke = '(((background-color *: *|bgcolor\=)(#ffffff;=|white;=))|border\=0|cellpadding\=\d*|cellspacing\=\d*)'
@@ -41,10 +41,10 @@ function! SEConventions()
             "empty hrefs + return false
             execute leader . 's/\v(<A[^>]*)@<=(href\='.a.' *'.a.'|return false;=)*//gi' 
 
-            " MISC. REMOVAL ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            " }
 
 
-            " TABLE CLASS/FONTSIZE vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            " TABLE CLASS/FONTSIZE {
             " check if line has <table> element
             let line = getline(current)
             let tablePos = match(line, '\c\v\<table')
@@ -54,7 +54,7 @@ function! SEConventions()
                 execute leader . 's/\v(\<table[^>]+)@<=(class\=)'.a.'=(.*table(-)@![^ '.a.']*)@!'.a.'=/class='.a.'table /gi'
                 " add class='table' to TABLE element that has no class
                 " attribute
-                execute leader . 's/\v(\<table[^>])%(.*class\=.*$)@!/\1 class='.a.'table'.a.' /gi'
+                execute leader . 's/\v(^.*\<table[^>]=)%(.* class\='.a.'[^'.a.']*'.a.'.*$)@!/\1 class='.a.'table'.a.' /gi'
                 let tableClass = 1 " flag for lines inside a table
 
                 " check for font classes, if none exist, add the se-font class
@@ -74,10 +74,10 @@ function! SEConventions()
                 let tableClass = 0
                 let fontSize = 0
             endif
-            " TABLE CLASS/FONTSIZE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            " }
            
 
-            " FONT TAGS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            " FONT TAGS {
             if fontSize != 0
                 "remove font tags with size=fontSize and optional closing font tag
                 let fontList = matchlist(line, '\c\v(\<font *%(face\=\$titlefont *|size\='.fontSize.' *){2} *\>)%(.*(\<\/font\>)|.*$)')
@@ -85,8 +85,8 @@ function! SEConventions()
                     let fontTag = fontList[1]
                     let closeFont = fontList[2]
                     " escape special chars
-                    let fontTag = substitute(fontTag, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
-                    let closeFont = substitute(closeFont, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
+                    let fontTag = escape(fontTag, '<$>=/')
+                    let closeFont = escape(closeFont, '<$>=/')
                     if strlen(closeFont) > 0
                         execute leader . 's/\v'.fontTag.'|'.closeFont.'//gi'
                     else
@@ -119,8 +119,8 @@ function! SEConventions()
                         let fontTag = classList[3]
                         let closeFont = classList[4]
                         " escape special chars
-                        let fontTag = substitute(fontTag, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
-                        let closeFont = substitute(closeFont, '\v(\<|\$|\>|\=|\/)', '\\\1', 'g')
+                        let fontTag = escape(fontTag, '<$>=/')
+                        let closeFont = escape(closeFont, '<$>=/')
                         if strlen(classAttr) > 0
                             let classes = substitute(classes, '\v(\$)', '\\\1', 'g')
                             if classes !~ otherFontClass
@@ -137,10 +137,10 @@ function! SEConventions()
                     endif
                 endif
             endif
-            " FONT TAGS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            " }
 
 
-            " BACKGROUND COLORS vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            " BACKGROUND COLORS {
             " background colors and <B> tags contained within the se-bg-gray table
             " rows
             " list background colors to catch
@@ -215,16 +215,20 @@ function! SEConventions()
                     if match(line, '\v\c(\<td[^>]*)@<=se-bold') == -1
                         " Add se-bold to existing class attribute, or create
                         " class attribute with se-bold included
-                        execute leader . 's/\v%(\<td[^>]{-})@<=%( class\='.a.'([^'.a.']*)'.a.')=(.*)\<\/= *b *\>/ class='.a.'se-bold \1'.a.' \2/i'
+                        if match(line, '\v\c(\<td[^>]*)@<=class') > -1
+                            execute leader . 's/\v(\<td[^>]*class\='.a.')@<=([^'.a.']*'.a.')@=/se-bold /i'
+                        else
+                            execute leader . 's/\v(\<td[^>]*)@<=/ class='.a.'se-bold'.a.' /i'
+                        endif
                     endif
                     "remove <B> and </B> tags
                     execute leader . 's/\v\<\/= *b *\>//gi'
                 endif
             endif
-            " BACKGROUND COLORS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            " }
 
 
-            " WIDTH ATTRIBUTES vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            " WIDTH ATTRIBUTES {
             " remove all width attr from table rows
             execute leader . 's/\v(\<tr[^>]*)@<=width\=[^ >]*//gi'
 
@@ -233,23 +237,23 @@ function! SEConventions()
 
             let line = getline(current)
             " get list containing html tag name and width amount
-            let widthList = matchlist(line, '\c\v\<@<=('.widthTags.')%([^>]+width\='.a.'=)([\$a-zA-Z0-9\%\-\_]+)')
+            let widthList = matchlist(line, '\c\v\<@<=('.widthTags.')%([^>]*width\='.a.'=)([\$a-zA-Z0-9\%\-\_]+)')
 
             if len(widthList) > 2
+                let widthTag = widthList[1]
                 let width = widthList[2]
-                let widthTag = widthList[3]
                 " convert width attribute to css property 
-                if match (line, '\v\<('.widthTag.')[^>]+style\=') > -1
-                    execute leader . 's/\vwidth\='.a.'=[\$a-zA-Z0-9\%-_]+'.a.'=//gi'
-                    execute leader . 's/\v%(\<'.widthTag.'[^>]+)@<=style\=('.a.')([^'.a.']+;='.a.')/style=\1width:'.width.';\2/gi'
+                if match(line, '\v\<'.widthTag.'[^>]*style\=') > -1
+                    execute leader . 's/\vwidth\='.a.'=[^> ]+'.a.'=//gi'
+                    execute leader . 's/\v%(\<'.widthTag.'[^>]*)@<=style\=('.a.')([^'.a.']+;='.a.')/style=\1width:'.width.';\2/gi'
                 else
-                    execute leader . 's/\v%(\<'.widthTag.'[^>]+)@<=width\='.a.'=[\$a-zA-Z0-9\%\-\_]+'.a.'=/style='.a.'width:'.width.';'.a.'/gi'
+                    execute leader . 's/\v%(\<'.widthTag.'[^>]*)@<=width\='.a.'=[$a-zA-Z0-9%\-_]+'.a.'=/style='.a.'width:'.width.';'.a.'/gi'
                 endif
             endif
-            " WIDTH ATTRIBUTES ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            " }
 
 
-            " ALIGN ATTRIBUTES vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            " ALIGN ATTRIBUTES {
             if tableClass == 1
                 " if inside a TABLE with 'table' class, remove all left text
                 " align syntax on TD elements
@@ -260,7 +264,7 @@ function! SEConventions()
             if len(alignList) > 2
                 " build pattern of alignment syntax to remove
                 let removeStr = alignList[1] . alignList[2]
-                let removeStr = substitute(removeStr,'=','\\=',"")
+                let removeStr = escape(removeStr,'=')
                 let alignClass = 'se-'.alignList[2]
                 let classPos = match(line, '\c\v(\<td[^>]+)@<=class\=')
                 if  classPos > -1
@@ -270,15 +274,15 @@ function! SEConventions()
                     execute leader . 's/\v(\<td )([^>]*)'.removeStr.';=/\1class='.a.alignClass.a.' \2/i'
                 endif
             endif
-            " ALIGN ATTRIBUTES ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            " }
 
 
-            " CLEANUP vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            " CLEANUP {
             " empty style attributes
             execute leader.'s/\vstyle\='."''".'//gi'
             execute leader.'s/\vstyle\= //gi'
             " force style attributes to take the left-most position
-            execute leader . 's/\v%(\<td)@<=( =[^>]*)(style\='.a.'.*'.a.')/ \2\1/i'
+            execute leader . 's/\v%(\<td )@<=([^>]*)(style\='.a.'.{-}'.a.')/ \2 \1/i'
             " empty class attributes
             execute leader.'s/\vclass\='.a.' *'.a.'//gi'
             execute leader.'s/\vclass\= //gi'
@@ -288,6 +292,7 @@ function! SEConventions()
             execute leader . 's/\%>'.startPos.'c\v((\()@<= *" *| *" *(\))@=)/"/gi'
             " remove extra spaces after '>' or before '<'
             execute leader . 's/\%>'.startPos.'c\v((\>)@<= +| +(\<)@=)([^$]*)@=//gi'
+            " }
         endif
 
         let current += 1
