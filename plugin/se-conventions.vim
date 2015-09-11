@@ -1,4 +1,4 @@
-" Version 1.01 
+" Version 1.02 
 " Updated: 9/2/15
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
@@ -204,11 +204,22 @@ function! SEConventions()
                 let boldRow = 1
             endif
 
-            " if current TR has se-bold class, remove from TDs
-            if boldRow == 1
-                execute leader . 's/\v(\<\/= *b *\>|(\<td[^>]*)@<=se-bold)//gi'
-            else
-                execute leader . 's/\v(\<td[^>]{-})%( class\='.a.'([^'.a.']*)'.a.')=(.*)\<\/= *b *\>/\1 class='.a.'se-bold \2'.a.' \3/i'
+            " Remove bold tag from TD lines
+            if match(line, '\v\c(\<td.*)@<=\<\/= *b *\>') > -1
+                " if current TR has se-bold class, remove se-bold and <B>
+                if boldRow == 1
+                    execute leader . 's/\v(\<\/= *b *\>|(\<td[^>]*)@<=se-bold)//gi'
+                " else, add se-bold class to TD
+                else
+                    " if se-bold not present on TD, add it
+                    if match(line, '\v\c(\<td[^>]*)@<=se-bold') == -1
+                        " Add se-bold to existing class attribute, or create
+                        " class attribute with se-bold included
+                        execute leader . 's/\v%(\<td[^>]{-})@<=%( class\='.a.'([^'.a.']*)'.a.')=(.*)\<\/= *b *\>/ class='.a.'se-bold \1'.a.' \2/i'
+                    endif
+                    "remove <B> and </B> tags
+                    execute leader . 's/\v\<\/= *b *\>//gi'
+                endif
             endif
             " BACKGROUND COLORS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
