@@ -9,6 +9,17 @@ let g:loaded_code_conventions_plugin = 1
 function! SEConventions()
     let start = line("'<")
     let stop = line("'>")
+    if !(start > 0)
+        let start = 0
+    endif
+    if !(stop > 0) 
+        let stop = line("$")
+    endif
+    if start > stop
+        let tmp = start
+        let start = stop
+        let stop = tmp
+    endif
     let current = start
     let boldRow = 0
     let tableClass = 0
@@ -41,6 +52,9 @@ function! SEConventions()
             "empty hrefs + return false
             execute leader . 's/\v(<A[^>]*)@<=(href\='.a.' *'.a.'|return false;=)*//gi' 
 
+            " remove all width attr from table rows
+            execute leader . 's/\v(\<tr[^>]*)@<=width(\=| *: *)[\$a-zA-Z0-9\%\-\_]+\%=;=//gi'
+
             " }
 
 
@@ -49,6 +63,9 @@ function! SEConventions()
             let line = getline(current)
             let tablePos = match(line, '\c\v\<table')
             if tablePos > -1  
+                " remove all width=100% and width:100% from table elements
+                execute leader . 's/\v(\<table[^>]*)@<=width(\=| *: *)100\%;=//gi'
+
                 " add the 'table' class to a TABLE that already has a class
                 " attribute, but no 'table' class
                 execute leader . 's/\v(\<table[^>]+)@<=(class\=)'.a.'=(.*table(-)@![^ '.a.']*)@!'.a.'=/class='.a.'table /gi'
@@ -209,7 +226,7 @@ function! SEConventions()
                 " if current TR has se-bold class, remove se-bold and <B>
                 if boldRow == 1
                     execute leader . 's/\v(\<\/= *b *\>|(\<td[^>]*)@<=se-bold)//gi'
-                " else, add se-bold class to TD
+                    " else, add se-bold class to TD
                 else
                     " if se-bold not present on TD, add it
                     if match(line, '\v\c(\<td[^>]*)@<=se-bold') == -1
@@ -229,8 +246,6 @@ function! SEConventions()
 
 
             " WIDTH ATTRIBUTES {
-            " remove all width attr from table rows
-            execute leader . 's/\v(\<tr[^>]*)@<=width\=[^ >]*//gi'
 
             "modify width attributes for these elements
             let widthTags = 'td|table|div'
@@ -245,7 +260,7 @@ function! SEConventions()
                 " convert width attribute to css property 
                 if match(line, '\v\<'.widthTag.'[^>]*style\=') > -1
                     execute leader . 's/\vwidth\='.a.'=[^> ]+'.a.'=//gi'
-                    execute leader . 's/\v%(\<'.widthTag.'[^>]*)@<=style\=('.a.')([^'.a.']+;='.a.')/style=\1width:'.width.';\2/gi'
+                    execute leader . 's/\v%(\<'.widthTag.'[^>]*)@<=style\=('.a.')([^'.a.']*;='.a.')/style=\1width:'.width.';\2/gi'
                 else
                     execute leader . 's/\v%(\<'.widthTag.'[^>]*)@<=width\='.a.'=[$a-zA-Z0-9%\-_]+'.a.'=/style='.a.'width:'.width.';'.a.'/gi'
                 endif
