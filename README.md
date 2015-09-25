@@ -1,7 +1,7 @@
 # vim-se-conventions
 Sycamore code conventions made easy.
 
-Version 1.02    
+Version 1.04(9/25/15)    
 ## Installation/Setup
 
 If you don't have a preferred installation method, I recommend
@@ -17,6 +17,8 @@ Include a visual mode remap for the SEConventions command:
 
 This command will update most of the HTML contained within visually selected `print()` statements to Sycamore standards.    
 
+Alternatively, the :SEConventions(:SEC) command accepts line numbers. `:SEConventions 100 200` will modify lines 100 to 200, inclusive. Given only one argument, it will modify from that line to the end of the file.
+
 If you encounter any problems, try updating the plugin from git:    
 
     cd ~/.vim/bundle/vim-se-conventions    
@@ -31,6 +33,7 @@ If the problem persists, it can be brought to my attention by creating an issue 
  * `table` class to all `TABLE` elements
  * `se-bold` class to all `TR` elements that have gray backgrounds (`#cfcfcf` or `se-bg-gray`)
 * Remove
+ * `width=100%` or `width:100%` from TABLE
  * `background-color:white;` or `#ffffff;`
  * `bgcolor=white` or `#ffffff;`
  * `border=0`
@@ -53,6 +56,7 @@ If the problem persists, it can be brought to my attention by creating an issue 
  * `width` attributes on `TD` and `TABLE` elements to CSS properties
  * Right and center text alignment (HTML or CSS) to appropriate `se-` class
 * Unchanged
+ * TR `height` attributes
  * `<font>` tags that contain attributes other than `face=$titlefont` and `size=1 or 2`
  * `<font>` tags not preceded by a `TD` element on the same line
  * Anything that would normally be replaced by:
