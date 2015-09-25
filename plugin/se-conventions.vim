@@ -6,9 +6,17 @@ if exists('g:loaded_code_conventions_plugin')
 endif
 let g:loaded_code_conventions_plugin = 1
 
-function! SEConventions()
-    let start = line("'<")
-    let stop = line("'>")
+function! SEConventions(...)
+    if a:0 == 1
+        let start = a:1
+        let stop = line("$")
+    elseif a:0 == 2
+        let start = a:1
+        let stop = a:2
+    else
+        let start = line("'<")
+        let stop = line("'>")
+    endif
     if !(start > 0)
         let start = 0
     endif
@@ -314,4 +322,4 @@ function! SEConventions()
     endwhile
 endfunction
 
-command! SEConventions call SEConventions()
+command! -nargs=* SEConventions call SEConventions(<f-args>)
