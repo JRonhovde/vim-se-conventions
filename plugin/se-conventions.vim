@@ -322,4 +322,5 @@ function! SEConventions(...)
     endwhile
 endfunction
 
-command! -nargs=* SEConventions call SEConventions(<f-args>)
+command! -range -nargs=* SEConventions call SEConventions(<f-args>)
+command! -range -nargs=* SEC call SEConventions(<f-args>)
