@@ -9,11 +9,18 @@ installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
 then simply copy and paste:
 
     cd ~/.vim/bundle
-    git clone git://github.com/JRonhovde/vim-se-conventions    
+    git clone git://github.com/JRonhovde/vim-se-conventions 
+    
+If not using the Pathogen plugin manager, just create a directory called `plugin` in your `~/.vim/` folder and place the `.vim` file from this repo there: 
+
+    cd ~/.vim
+    mkdir plugin
 
 Include a visual mode remap for the SEConventions command:
 
     vnoremap ;sec <esc>:SEConventions<CR>   
+
+Use this command by visually selecting a block of code (pressing `v` while in command mode) and the pressing `;sec`.
 
 This command will update most of the HTML contained within visually selected `print()` statements to Sycamore standards.    
 
