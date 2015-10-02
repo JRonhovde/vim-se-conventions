@@ -1,7 +1,7 @@
 # vim-se-conventions
 Sycamore code conventions made easy.
 
-Version 1.04(9/25/15)    
+Version 1.05(10/3/15)    
 ## Installation/Setup
 
 If you don't have a preferred installation method, I recommend
@@ -22,7 +22,7 @@ Include a visual mode remap for the SEConventions command:
 
 Use this command by visually selecting a block of code (pressing `v` while in command mode) and the pressing `;sec`.
 
-This command will update most of the HTML contained within visually selected `print()` statements to Sycamore standards.    
+This command will update most of the HTML contained within visually selected `print()` statements to Sycamore standards. Starting with v1.05, SEC will also convert SQL 'for' loops to use mysql_fetch_assoc() syntax.    
 
 Alternatively, the :SEConventions(:SEC) command accepts line numbers. `:SEConventions 100 200` will modify lines 100 to 200, inclusive. Given only one argument, it will modify from that line to the end of the file.
 
@@ -62,6 +62,8 @@ If the problem persists, it can be brought to my attention by creating an issue 
  an appropriate class on the `TD`
  * `width` attributes on `TD` and `TABLE` elements to CSS properties
  * Right and center text alignment (HTML or CSS) to appropriate `se-` class
+ * `for($i=0;$i<$rsc;$i++)` to `while($sql_row = mysql_fetch_assoc($rs)) {`
+ * `$var = mysql_result($rs, $i, "Var")` to `$var = $mysql_row["Var"]`
 * Unchanged
  * TR `height` attributes
  * `<font>` tags that contain attributes other than `face=$titlefont` and `size=1 or 2`

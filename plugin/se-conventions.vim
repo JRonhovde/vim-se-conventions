@@ -1,5 +1,5 @@
-" Version 1.04 
-" Updated: 9/25/15
+" Version 1.05 
+" Updated: 10/3/15
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
     finish
@@ -33,13 +33,17 @@ function! SEConventions(...)
     let tableClass = 0
     let fontSize = 0
     let a = "'"
+    let rsVar = ''
+    let rscVar = ''
+    let fetch = 0
+    let newQuery = 0
 
     while current <= stop 
         let leader = 'silent! ' . current . ',' . current
         let line = getline(current)
         " only modify lines in print statments
         let startPos = match(line, '\c\v%(^[\t\s ]*)@<=print\( *"')
-        if startPos > -1  
+        if startPos > -1 " TABLE/HTML formatting 
 
             " MISC. REMOVAL {
             "border cellpadding cellshading bgcolor=white
@@ -317,6 +321,34 @@ function! SEConventions(...)
             execute leader . 's/\%>'.startPos.'c\v((\>)@<= +| +(\<)@=)([^$]*)@=//gi'
             " }
         endif
+        " Start SQL logic {
+        let line = getline(current)
+        let rsVarList = matchlist(line, '\c\v(\$[^ ]*)( *\= *mysql_query\(.{-}\);)@=')
+        if len(rsVarList) > 1 
+            let rsVar = rsVarList[1]
+            let rsVar = escape(rsVar,'$')
+            let fetch = 0
+            let newQuery = 1
+        endif
+
+        let rscVarList = matchlist(line, '\c\v(\$[^ ]*)( *\= *mysql_num_rows\( *'.escape(rsVar,'$').' *\);)@=')
+        if len(rscVarList) > 1 
+            let rscVar = rscVarList[1]
+            let rscVar = escape(rscVar,'$')
+        endif
+        if len(rsVar) > 0
+            if newQuery == 1 
+                execute leader.'s/\vfor\(.{-}'.rscVar.'.*\) *\{ *$/while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\0/i'
+            endif
+            if match(line,'\v\cmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);') > 0 && fetch == 0
+                let fetch = 1
+                execute '/\vmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);/normal O// SQL_FETCH'
+                let stop += 1
+                let newQuery = 0
+            endif
+            execute leader.'s/\vmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);/$fetch_row[\1];/i'
+        endif
+        " }
 
         let current += 1
     endwhile
