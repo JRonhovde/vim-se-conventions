@@ -5,6 +5,7 @@ Version 1.05(10/3/15)
 ## Installation/Setup
 
 If you don't have a preferred installation method, I recommend
+
 installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
 then simply copy and paste:
 
