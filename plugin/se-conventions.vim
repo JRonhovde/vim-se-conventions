@@ -1,5 +1,5 @@
-" Version 1.05 
-" Updated: 10/3/15
+" Version 1.05.1
+" Updated: 10/5/15
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
     finish
@@ -346,7 +346,7 @@ function! SEConventions(...)
                 let stop += 1
                 let newQuery = 0
             endif
-            execute leader.'s/\vmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);/$fetch_row[\1];/i'
+            execute leader.'s/\vmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);/$mysql_row[\1];/i'
         endif
         " }
 
