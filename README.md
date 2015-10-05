@@ -62,7 +62,7 @@ If the problem persists, it can be brought to my attention by creating an issue 
  an appropriate class on the `TD`
  * `width` attributes on `TD` and `TABLE` elements to CSS properties
  * Right and center text alignment (HTML or CSS) to appropriate `se-` class
- * `for($i=0;$i<$rsc;$i++)` to `while($sql_row = mysql_fetch_assoc($rs)) {`
+ * `for($i=0;$i<$rsc;$i++)` to `while($mysql_row = mysql_fetch_assoc($rs)) {`
  * `$var = mysql_result($rs, $i, "Var")` to `$var = $mysql_row["Var"]`
 * Unchanged
  * TR `height` attributes
