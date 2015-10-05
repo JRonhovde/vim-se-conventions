@@ -338,7 +338,7 @@ function! SEConventions(...)
         endif
         if len(rsVar) > 0
             if newQuery == 1 
-                execute leader.'s/\vfor\(.{-}'.rscVar.'.*\) *\{ *$/while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\0/i'
+                execute leader.'s/\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\<'.rscVar.'.*\) *\{) *$/\1while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\2\r\1    if(\3 !== 0) \3 = 0;\r\1    else \3++;/i'
             endif
             if match(line,'\v\cmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);') > 0 && fetch == 0
                 let fetch = 1
