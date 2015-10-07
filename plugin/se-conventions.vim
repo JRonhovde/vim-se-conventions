@@ -35,7 +35,6 @@ function! SEConventions(...)
     let a = "'"
     let rsVar = ''
     let rscVar = ''
-    let fetch = 0
     let newQuery = 0
 
     while current <= stop 
@@ -327,23 +326,22 @@ function! SEConventions(...)
         if len(rsVarList) > 1 
             let rsVar = rsVarList[1]
             let rsVar = escape(rsVar,'$')
-            let fetch = 0
             let newQuery = 1
         endif
 
-        let rscVarList = matchlist(line, '\c\v(\$[^ ]*)( *\= *mysql_num_rows\( *'.escape(rsVar,'$').' *\);)@=')
+        let rscVarList = matchlist(line, '\c\v(\$[^ ]*)( *\= *mysql_num_rows\( *'.rsVar.' *\);)@=')
         if len(rscVarList) > 1 
             let rscVar = rscVarList[1]
             let rscVar = escape(rscVar,'$')
         endif
         if len(rsVar) > 0
-            if newQuery == 1 
-                execute leader.'s/\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\<'.rscVar.'.*\) *\{) *$/\1while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\2\r\1    if(\3 !== 0) \3 = 0;\r\1    else \3++;\r\1    \/\/ SQL_FETCH/i'
-            endif
-            if match(line,'\v\cmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);') > 0 && fetch == 0
-                let fetch = 1
-                let stop += 1
+            if newQuery == 1 && match(line,'\c\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$') > -1
+                execute leader.'s/\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$/\1while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\2\r\1    if(\3 !== 0) \3 = 0; \/\/ delete if not needed\r\1    else \3++; \/\/ delete if not needed\r\1    \/\/ SQL_FETCH/i'
+                let stop += 3
+                let current += 3
                 let newQuery = 0
+            endif
+            if match(line,'\v\cmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);') > -1
             endif
             execute leader.'s/\vmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);/$mysql_row[\1];/i'
         endif
