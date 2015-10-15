@@ -1,5 +1,4 @@
-" Version 1.05.1
-" Updated: 10/5/15
+" Version 1.05.2 - Oct 15 2015
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
     finish
@@ -341,7 +340,11 @@ function! SEConventions(...)
                 let current += 3
                 let newQuery = 0
             endif
-            if match(line,'\v\cmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);') > -1
+            if match(line,'\v\cmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);') > -1 && newQuery == 1
+                execute leader.'s/\v^(^[\t\s ]*)(.*)mysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);/\1$mysql_row = mysql_fetch_assoc('.rsVar.');\r\1\/\/ SQL_FETCH\r\1\2$mysql_row[\3];/i'
+                let stop += 2
+                let current += 2
+                let newQuery = 0
             endif
             execute leader.'s/\vmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *("[^ ]*") *\);/$mysql_row[\1];/i'
         endif
