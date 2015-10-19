@@ -1,4 +1,4 @@
-" Version 1.05.3 - Oct 16 2015
+" Version 1.05.4 - Oct 19 2015
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
     finish
