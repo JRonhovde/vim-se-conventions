@@ -335,7 +335,7 @@ function! SEConventions(...)
         endif
         if len(rsVar) > 0
             if newQuery == 1 && match(line,'\c\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$') > -1
-                execute leader.'s/\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$/\1\3 = 0; \/\/ SQL_FETCH\r\1while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\2\r\1    if(\3 !== 0) \3++; \/\/ SQL_FETCH\r\1    \/\/ SQL_FETCH/i'
+                execute leader.'s/\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$/\1\3 = -1; \/\/ SQL_FETCH\r\1while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\2\r\1    \3++; \/\/ SQL_FETCH\r\1    \/\/ SQL_FETCH/i'
                 let stop += 3
                 let current += 3
                 let newQuery = 0
