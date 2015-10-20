@@ -1,4 +1,4 @@
-" Version 1.05.4 - Oct 19 2015
+" Version 1.05.5 - Oct 20 2015
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
     finish
@@ -335,9 +335,9 @@ function! SEConventions(...)
         endif
         if len(rsVar) > 0
             if newQuery == 1 && match(line,'\c\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$') > -1
-                execute leader.'s/\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$/\1\3 = -1; \/\/ SQL_FETCH\r\1while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\2\r\1    \3++; \/\/ SQL_FETCH\r\1    \/\/ SQL_FETCH/i'
-                let stop += 3
-                let current += 3
+                execute leader.'s/\v(^[\t\s ]*)(for\(.* *(\$[^ ]{-}) *\< *'.rscVar.'.*\) *\{) *$/\1while\($mysql_row = mysql_fetch_assoc('.rsVar.'\)) { \/\/\2\r\1    \/\/ SQL_FETCH/i'
+                let stop += 1
+                let current += 1
                 let newQuery = 0
             endif
             if match(line,'\v\cmysql_result\( *'.rsVar.' *, *%(\$[^ ]+|0) *, *(["'.a.'][^ ]*["'.a.']) *\);') > -1 && newQuery == 1
