@@ -1,4 +1,4 @@
-" Version 1.05.5 - Oct 20 2015
+" Version 1.05.6 - Oct 28 2015
 " git@github.com:JRonhovde/vim-se-conventions.git
 if exists('g:loaded_code_conventions_plugin')
     finish
@@ -60,7 +60,7 @@ function! SEConventions(...)
             execute leader . 's/\v%(style\='.a.'[^'.a.']*[^; ])@<= *'.a.'/;'.a.'/gi'
 
             "empty hrefs + return false
-            execute leader . 's/\v(<A[^>]*)@<=(href\='.a.' *'.a.'|return false;=)*//gi' 
+            execute leader . 's/\v(<[Aa][^>]*)@<=(href\='.a.' *'.a.'|return false;=)*//gi' 
 
             " remove all width attr from table rows
             execute leader . 's/\v(\<tr[^>]*)@<=width(\=| *: *)[\$a-zA-Z0-9\%\-\_]+\%=;=//gi'
