@@ -78,10 +78,10 @@ function! SEConventions(...)
 
                 " add the 'table' class to a TABLE that already has a class
                 " attribute, but no 'table' class
-                execute leader . 's/\v(\<table[^>]+)@<=(class\=)'.a.'=(.*table(-)@![^ '.a.']*)@!'.a.'=/class='.a.'table /gi'
+                execute leader . 's/\v(\<table[^>]+)@<=(class\=)'.a.'=(.*table(-)@! se-center[^ '.a.']*)@!'.a.'=/class='.a.'table /gi'
                 " add class='table' to TABLE element that has no class
                 " attribute
-                execute leader . 's/\v(^.*\<table[^>]=)%(.* class\='.a.'[^'.a.']*'.a.'.*$)@!/\1 class='.a.'table'.a.' /gi'
+                execute leader . 's/\v(^.*\<table[^>]=)%(.*class\='.a.'[^'.a.']*'.a.'.*$)@!/\1 class='.a.'table'.a.' /gi'
                 let tableClass = 1 " flag for lines inside a table
 
                 " check for font classes, if none exist, add the se-font class
