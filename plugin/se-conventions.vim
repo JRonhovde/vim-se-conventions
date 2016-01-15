@@ -285,7 +285,7 @@ function! SEConventions(...)
                 execute leader . 's/\v(\<td[^>]+)@<=((text-)=align( *: *|\=)|se-)left//gi'
             endif
             let line = getline(current)
-            let alignList = matchlist(line, '\c\v%(\<td[^>]*)@<=(align\=|text-align *: *)(center|right)')
+            let alignList = matchlist(line, '\c\v%(\<td[^>]*)@<=(%(v)@<!align\=|text-align *: *)(center|right)')
             if len(alignList) > 2
                 " build pattern of alignment syntax to remove
                 let removeStr = alignList[1] . alignList[2]
@@ -294,9 +294,9 @@ function! SEConventions(...)
                 let classPos = match(line, '\c\v(\<td[^>]+)@<=class\=')
                 if  classPos > -1
                     execute leader . 's/\%>'.classPos.'c\v%(class\=)@<=%('.a.'([^'.a.']*)'.a.'|([\$A-Za-z0-9-_]*))/'.a.alignClass.' \1'.a.' /i'
-                    execute leader . 's/\v(\<td[^>]+)@<='.removeStr.';=//i'
+                    execute leader . 's/\v(\<td[^>]+)@<=%(v)@<!'.removeStr.';=//gi'
                 else
-                    execute leader . 's/\v(\<td )([^>]*)'.removeStr.';=/\1class='.a.alignClass.a.' \2/i'
+                    execute leader . 's/\v(\<td )([^>]*)%(v)@<!'.removeStr.';=/\1class='.a.alignClass.a.' \2/gi'
                 endif
             endif
             " }
