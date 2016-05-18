@@ -9,7 +9,7 @@ installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
 then simply copy and paste:
 
     cd ~/.vim/bundle
-    git clone git://github.com/JRonhovde/vim-se-conventions 
+    git clone git@github.com:JRonhovde/vim-se-conventions.git 
     
 If not using the Pathogen plugin manager, just create a directory called `plugin` in your `~/.vim/` folder and place the `.vim` file from this repo there: 
 
@@ -18,9 +18,9 @@ If not using the Pathogen plugin manager, just create a directory called `plugin
 
 Include a visual mode remap for the SEConventions command:
 
-    vnoremap ;sec <esc>:SEConventions<CR>   
+    vnoremap <leader>sec <esc>:SEConventions<CR>   
 
-Use this command by visually selecting a block of code (pressing `v` while in command mode) and the pressing `;sec`.
+Use this command by visually selecting a block of code (pressing `v` while in command mode) and the pressing `<leader>sec`. By default, "<leader>" is set to backslash("\").
 
 This command will update most of the HTML contained within visually selected `print()` statements to Sycamore standards. Starting with v1.05, SEC will also convert SQL 'for' loops to use mysql_fetch_assoc() syntax.    
 
@@ -29,8 +29,7 @@ Alternatively, the :SEConventions(:SEC) command accepts line numbers. `:SEConven
 If you encounter any problems, try updating the plugin from git:    
 
     cd ~/.vim/bundle/vim-se-conventions    
-    git fetch -p    
-    git merge origin/master    
+    git pull origin master    
 
 If the problem persists, it can be brought to my attention by creating an issue on [GitHub](https://github.com/JRonhovde/vim-se-conventions)    
 
