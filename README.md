@@ -38,6 +38,7 @@ If the problem persists, it can be brought to my attention by creating an issue 
 Add
  * `table` class to all `TABLE` elements
  * `se-bold` class to all `TR` elements that have gray backgrounds (`#cfcfcf` or `se-bg-gray`)
+
 Remove
  * `width=100%` or `width:100%` from TABLE
  * `background-color:white;` or `#ffffff;`
@@ -54,7 +55,8 @@ Remove
  * Left text alignment (HTML, CSS, or `se-left` class) on `TD` elements
  * Empty `style` and `class` attributes
  * Extra spaces within HTML elements and around opening and closing parentheses for `print()` statements
-Replace/Change
+
+Replace/Change    
  * Gray(`#cfcfcf`), light gray(`#efefef`), pink(`#ffcfcf`), and school color(`$titlefont`) background colors to 
  their respective `se-bg` classes
  * `<font>` tags with `face=$titlefont` and `size=1 or 2` (opposite of the font class on the `TABLE` element) to
@@ -63,7 +65,8 @@ Replace/Change
  * Right and center text alignment (HTML or CSS) to appropriate `se-` class
  * `for($i=0;$i<$rsc;$i++)` to `while($mysql_row = mysql_fetch_assoc($rs)) {`.
  * `$var = mysql_result($rs, $i, "Var")` to `$var = $mysql_row["Var"]`
-Unchanged
+
+Unchanged    
  * TR `height` attributes
  * `<font>` tags that contain attributes other than `face=$titlefont` and `size=1 or 2`
  * `<font>` tags not preceded by a `TD` element on the same line
